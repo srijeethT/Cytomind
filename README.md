@@ -157,8 +157,7 @@ ML_BACKEND_URL=http://127.0.0.1:8000
 ### Backend Environment (`backend/.env`)
 ```env
 # MongoDB connection
-MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/cytomind
-
+MONGODB_URI=
 # Model path
 MODEL_PATH=../ensemble_final.pth
 ```
