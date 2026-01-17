@@ -39,3 +39,24 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Python
+backend/venv/
+backend/__pycache__/
+*.pyc
+*.pyo
+
+# Large model files (too big for GitHub - use Git LFS or share separately)
+*.pth
+*.pt
+*.onnx
+*.h5
+
+# Generated files
+backend/uploads/
+backend/reports/
+*.pdf
+
+# IDE
+.vscode/
+.idea/

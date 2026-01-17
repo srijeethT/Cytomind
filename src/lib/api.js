@@ -23,10 +23,20 @@ export const api = {
     }
   },
 
-  // Upload image with patient data
+  // Upload single image with patient data
   async uploadImage(file, patientData) {
+    return this.uploadImages([file], patientData);
+  },
+
+  // Upload multiple images with patient data
+  async uploadImages(files, patientData) {
     const formData = new FormData();
-    formData.append('image', file);
+    
+    // Append all images
+    files.forEach((file, index) => {
+      formData.append('images', file);
+    });
+    
     formData.append('patientId', patientData.patientId);
     formData.append('name', patientData.name);
     formData.append('age', patientData.age);
@@ -68,7 +78,7 @@ export const api = {
     const token = localStorage.getItem('token');
     
     try {
-      const response = await fetch(`/api/report/${jobId}`, {
+      const response = await fetch(`/api/reports/${jobId}`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       
@@ -80,7 +90,7 @@ export const api = {
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `report_${jobId}.pdf`;
+      a.download = `cytomind_report_${jobId}.pdf`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);

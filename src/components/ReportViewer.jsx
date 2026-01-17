@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Download, AlertCircle } from 'lucide-react';
+import { Download, AlertCircle, TrendingUp } from 'lucide-react';
 import { api } from '../lib/api';
 
 const ReportViewer = ({ report }) => {
@@ -64,13 +64,22 @@ const ReportViewer = ({ report }) => {
           </div>
         </div>
 
+        {/* Primary Cell Type */}
+        <div className="mb-6 bg-indigo-50 rounded-lg p-4">
+          <p className="text-sm text-gray-600 mb-2">Primary Cell Type Detected</p>
+          <p className="text-xl font-bold text-indigo-700">
+            {report.primaryClassFullName || report.primaryClass}
+          </p>
+          <p className="text-sm text-indigo-600">({report.primaryClass})</p>
+        </div>
+
         <div className="mb-6">
           <p className="text-sm text-gray-600 mb-3">Malignancy Percentage</p>
           <div className="flex items-center">
             <div className="flex-1 bg-gray-200 rounded-full h-10 overflow-hidden">
               <div
                 className="bg-gradient-to-r from-yellow-400 via-orange-500 to-red-600 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm transition-all duration-500"
-                style={{ width: `${report.malignancyPercentage}%` }}
+                style={{ width: `${Math.min(report.malignancyPercentage, 100)}%` }}
               >
                 {report.malignancyPercentage >= 15 && `${report.malignancyPercentage}%`}
               </div>
@@ -87,6 +96,41 @@ const ReportViewer = ({ report }) => {
           <p className="text-sm text-gray-600 mb-2">Confidence Score</p>
           <p className="text-3xl font-bold text-indigo-600">{report.confidence}%</p>
         </div>
+
+        {/* Top Predictions */}
+        {report.topPredictions && report.topPredictions.length > 0 && (
+          <div className="mb-6">
+            <div className="flex items-center mb-3">
+              <TrendingUp className="w-5 h-5 text-gray-600 mr-2" />
+              <p className="text-sm font-medium text-gray-600">Top Predictions</p>
+            </div>
+            <div className="space-y-2">
+              {report.topPredictions.slice(0, 5).map((pred, index) => (
+                <div key={index} className="flex items-center">
+                  <div className="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 font-bold text-sm mr-3">
+                    {index + 1}
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex justify-between items-center mb-1">
+                      <span className="text-sm font-medium text-gray-700">
+                        {pred.class_full_name || pred.class}
+                      </span>
+                      <span className="text-sm font-bold text-indigo-600">
+                        {pred.probability?.toFixed(1)}%
+                      </span>
+                    </div>
+                    <div className="w-full bg-gray-100 rounded-full h-2">
+                      <div
+                        className="bg-indigo-500 h-2 rounded-full transition-all duration-300"
+                        style={{ width: `${pred.probability}%` }}
+                      />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
 
       {error && (
